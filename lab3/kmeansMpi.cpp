@@ -45,6 +45,8 @@ void kmeans(float** data,float** cluster, int local_dataNum, int demension,
 
 int main(int argc, char* argv[]){
     int rank, size;
+    // ifstream input("case.txt");
+    // ofstream output("caseout.txt");
     MPI_Init(&argc, &argv);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
@@ -57,14 +59,16 @@ int main(int argc, char* argv[]){
 
     //-----------------------input-&&-distribution----------------------------
     if(rank == 0){
-        cout << "Please input the number of data, demension, clusterNum and MAX_SPACE" << endl;
+        // cout << "Please input the number of data, demension, clusterNum and MAX_SPACE" << endl;
         cin >> dataNum >> demension >> clusterNum;
+        // input >> dataNum >> demension >> clusterNum;
         all_dataNum = dataNum;
         data = new float*[dataNum];
         for(int i = 0; i < dataNum; i++){
             data[i] = new float[demension];
             for(int j = 0; j < demension; j++){
                 cin >> data[i][j];
+                // input >> data[i][j];
                 if(data[i][j] > MAX_SPACE){
                     MAX_SPACE = data[i][j];
                 }
@@ -129,14 +133,14 @@ int main(int argc, char* argv[]){
     if(rank == 0){
         srand(time(NULL));
         cluster = new float*[clusterNum];
-        cout << "the init cluster is:" << endl;
+        // cout << "the init cluster is:" << endl;
         for(int i = 0; i < clusterNum; i++){
             cluster[i] = new float[demension];
             for(int j = 0; j < demension; j++){
                 cluster[i][j] = (float)rand()/RAND_MAX * MAX_SPACE;
-                cout << cluster[i][j] << " ";
+                // cout << cluster[i][j] << " ";
             }
-            cout << endl;
+            // cout << endl;
         }
 
         float* tempcluster = new float[clusterNum * demension];
@@ -230,7 +234,7 @@ int main(int argc, char* argv[]){
     
     //------------------------calculate-result-----------------------------------------
     if(rank == 0){
-        cout << "The result is " << calculate(data, cluster, demension, clusterNum, belong, dataNum) << endl;
+        cout << calculate(data, cluster, demension, clusterNum, belong, dataNum) << endl;
     }
     MPI_Barrier(MPI_COMM_WORLD);
     MPI_Finalize();
